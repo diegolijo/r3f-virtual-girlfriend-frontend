@@ -108,11 +108,10 @@ let setupMode = false;
 
 export function Avatar(props) {
   const { nodes, materials, scene } = useGLTF(
-    "/models/64f1a714fe61576b46f27ca2.glb"
+    "/models/Saia_MT.glb"
   );
 
   const { message, onMessagePlayed, chat } = useChat();
-
   const [lipsync, setLipsync] = useState();
 
   useEffect(() => {
@@ -134,15 +133,13 @@ export function Avatar(props) {
 
   const group = useRef();
   const { actions, mixer } = useAnimations(animations, group);
-  const [animation, setAnimation] = useState(
-    animations.find((a) => a.name === "Idle") ? "Idle" : animations[0].name // Check if Idle animation exists otherwise use first animation
+  const [animation, setAnimation] = useState("Idle"  // Check if Idle animation exists otherwise use first animation
   );
   useEffect(() => {
-    actions[animation]
-      .reset()
-      .fadeIn(mixer.stats.actions.inUse === 0 ? 0 : 0.5)
-      .play();
-    return () => actions[animation].fadeOut(0.5);
+    actions[animation].reset();
+    actions[animation].fadeIn(mixer.stats.actions.inUse === 0 ? 0 : 0.5);
+    actions[animation].play();
+    return () => actions[animation]?.fadeOut(0.5);
   }, [animation]);
 
   const lerpMorphTarget = (target, value, speed = 0.1) => {
@@ -166,7 +163,7 @@ export function Avatar(props) {
             set({
               [target]: value,
             });
-          } catch (e) {}
+          } catch (e) { }
         }
       }
     });
@@ -257,7 +254,7 @@ export function Avatar(props) {
         }
         const value =
           nodes.EyeLeft.morphTargetInfluences[
-            nodes.EyeLeft.morphTargetDictionary[key]
+          nodes.EyeLeft.morphTargetDictionary[key]
           ];
         if (value > 0.01) {
           emotionValues[key] = value;
@@ -374,5 +371,5 @@ export function Avatar(props) {
   );
 }
 
-useGLTF.preload("/models/64f1a714fe61576b46f27ca2.glb");
+useGLTF.preload("/models/Saia_MT.glb");
 useGLTF.preload("/models/animations.glb");

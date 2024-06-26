@@ -2,9 +2,25 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 const backendUrl = "http://localhost:3000";
 
+const API_URL = "http://172.18.2.5:443";
+
 const ChatContext = createContext();
 
 export const ChatProvider = ({ children }) => {
+
+  const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState();
+  const [loading, setLoading] = useState(false);
+  const [cameraZoomed, setCameraZoomed] = useState(true);
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      setMessage(messages[0]);
+    } else {
+      setMessage(null);
+    }
+  }, [messages]);
+
   const chat = async (message) => {
     setLoading(true);
     const data = await fetch(`${backendUrl}/chat`, {
@@ -18,21 +34,10 @@ export const ChatProvider = ({ children }) => {
     setMessages((messages) => [...messages, ...resp]);
     setLoading(false);
   };
-  const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState();
-  const [loading, setLoading] = useState(false);
-  const [cameraZoomed, setCameraZoomed] = useState(true);
+
   const onMessagePlayed = () => {
     setMessages((messages) => messages.slice(1));
   };
-
-  useEffect(() => {
-    if (messages.length > 0) {
-      setMessage(messages[0]);
-    } else {
-      setMessage(null);
-    }
-  }, [messages]);
 
   return (
     <ChatContext.Provider
